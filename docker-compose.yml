@@ -1,0 +1,46 @@
+services:
+ app:
+  build:
+   context: .
+   dockerfile: docker-services/app/Dockerfile
+  restart: on-failure:5
+  container_name: customer-management-api-app
+  depends_on:
+   - db
+  volumes:
+   - ./src:/app/src
+
+ server:
+  image: nginx:latest
+  restart: on-failure:5
+  container_name: customer-management-api-server
+  volumes:
+   - ./docker-services/server/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  ports:
+   - '85:80'
+  depends_on:
+   - app
+
+ db:
+  image: postgres
+  restart: on-failure:5
+  environment:
+   - POSTGRES_DB=customer_management_api
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=postgres
+  container_name: customer-management-api-db
+  volumes:
+   - ./docker-services/db/pgdata:/var/lib/postgresql/data
+  ports:
+   - '5432:5432'
+
+ pgadmin:
+  image: dpage/pgadmin4
+  container_name: customer-management-api-pgadmin
+  environment:
+   - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+   - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+  ports:
+   - '5050:80'
+  depends_on:
+   - db
