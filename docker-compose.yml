@@ -9,6 +9,10 @@ services:
    - db
   volumes:
    - ./src:/app/src
+   - ./logs:/app/logs
+   - ./prisma:/app/prisma
+   - ./generated:/app/generated
+   - .env:/app/.env
 
  server:
   image: nginx:latest
@@ -25,9 +29,9 @@ services:
   image: postgres
   restart: on-failure:5
   environment:
-   - POSTGRES_DB=customer_management_api
-   - POSTGRES_USER=postgres
-   - POSTGRES_PASSWORD=postgres
+   - POSTGRES_DB=${POSTGRES_DB}
+   - POSTGRES_USER=${POSTGRES_USER}
+   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   container_name: customer-management-api-db
   volumes:
    - ./docker-services/db/pgdata:/var/lib/postgresql/data
@@ -38,8 +42,8 @@ services:
   image: dpage/pgadmin4
   container_name: customer-management-api-pgadmin
   environment:
-   - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-   - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+   - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+   - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
   ports:
    - '5050:80'
   depends_on:

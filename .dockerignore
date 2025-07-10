@@ -1,12 +1,12 @@
 # Node.js App
-**/node_modules/
 **/dist
 .git
 npm-debug.log
-.coverage
-.coverage.*
-.env
-.aws
+README.md
 
 # Docker
 /docker-services
+
+# OS and IDEA
+.DS_Store
+.idea
