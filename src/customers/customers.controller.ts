@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Query, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from '@generated/prisma';
 // import { CreateCustomerDto } from './dto/create-customer.dto';
 // import { UpdateCustomerDto } from './dto/update-customer.dto';
 

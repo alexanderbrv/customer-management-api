@@ -1,8 +1,8 @@
-import { Catch, ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
+import { Catch, ArgumentsHost, HttpStatus, HttpException, NotFoundException } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { MyLoggerService } from '@src/my-logger/my-logger.service';
-import { PrismaClientValidationError } from 'generated/prisma/runtime/library';
+import { PrismaClientValidationError } from '@generated/prisma/runtime/library';
 
 type MyResponseObject = {
   success: boolean;
@@ -29,7 +29,10 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       timestamp: new Date().toISOString(),
     };
 
-    if (exception instanceof HttpException) {
+    if (exception instanceof NotFoundException) {
+      MyResponseObject.code = exception.getStatus();
+      MyResponseObject.response = 'Not Found';
+    } else if (exception instanceof HttpException) {
       MyResponseObject.code = exception.getStatus();
       MyResponseObject.response = exception.getResponse();
     } else if (exception instanceof PrismaClientValidationError) {

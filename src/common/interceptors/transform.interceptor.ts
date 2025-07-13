@@ -17,8 +17,8 @@ export class TransformInterceptor<T> implements NestInterceptor<T, StandardRespo
       map((data) => ({
         success: true,
         code: 200,
-        message: data.message || '',
-        data,
+        message: data?.message || '',
+        data: data ?? {},
         timestamp: new Date().toISOString(),
       })),
     );
