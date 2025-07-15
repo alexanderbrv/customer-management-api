@@ -14,6 +14,8 @@ model Customer {
     name        String
     email       String      @unique
     type        Type
+    phones      Phone[]
+    addresses   Address[]
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
 }
@@ -23,6 +25,41 @@ enum Type {
     business
     government
     institution
+}
+
+model Phone {
+   id           Int         @id @default(autoincrement())
+   phone        String      @unique
+   customer     Customer    @relation(fields: [customerId], references: [id])
+   customerId   Int
+}
+
+model Address {
+   id           Int         @id @default(autoincrement())
+   country      Country     @relation(fields: [countryId], references: [id])
+   countryId    Int
+   settlement   Settlement  @relation(fields: [settlementId], references: [id])
+   settlementId Int
+   street       String
+   building     String
+   block        String?
+   flat         String
+   zipcode      String?
+   customer     Customer    @relation(fields: [customerId], references: [id])
+   customerId   Int         @unique
+}
+
+model Country {
+   id           Int         @id @default(autoincrement())
+   country      String      @unique
+   countryCode  String      @unique
+   addresses    Address[]
+}
+
+model Settlement {
+   id           Int         @id @default(autoincrement())
+   settlement   String      @unique
+   addresses    Address[]
 }
 
 model User {

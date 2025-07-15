@@ -1,15 +1,20 @@
 import {
+  IsString,
   IsNotEmpty,
   IsEmail,
-  IsString,
   IsArray,
   ValidateNested,
+  IsNumber,
 } from 'class-validator';
 import { AddressDto } from './address.dto';
 import { CustomerTypeEnumDto } from './enums/customer-type-enum.dto';
 import { Type } from 'class-transformer';
 
-export class CreateCustomerDto extends CustomerTypeEnumDto {
+export class CustomerDto extends CustomerTypeEnumDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -20,10 +25,10 @@ export class CreateCustomerDto extends CustomerTypeEnumDto {
 
   @IsArray()
   @IsString({ each: true })
-  phones: string[];
+  phones?: string[];
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AddressDto)
-  addresses: AddressDto[];
+  addresses?: AddressDto[];
 }

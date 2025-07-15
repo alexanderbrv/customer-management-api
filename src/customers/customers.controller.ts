@@ -1,30 +1,42 @@
-import { Controller, Get, Post, Query, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { Prisma } from '@generated/prisma';
-// import { CreateCustomerDto } from './dto/create-customer.dto';
-// import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { OptionalCustomerTypeEnumDto } from './dto/enums/optional-customer-type-enum.dto';
 
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @Post()
-  create(@Body() createCustomerDto: Prisma.CustomerCreateInput) {
+  create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.create(createCustomerDto);
   }
 
   @Get()
-  findAll(@Query('type') type?: 'individual' | 'business' | 'government' | 'institution') {
+  findAll(@Query() type?: OptionalCustomerTypeEnumDto) {
     return this.customersService.findAll(type);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.customersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerDto: Prisma.CustomerUpdateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCustomerDto: UpdateCustomerDto,
+  ) {
     return this.customersService.update(+id, updateCustomerDto);
   }
 
