@@ -9,19 +9,21 @@ import { OptionalCustomerTypeEnumDto } from './dto/enums/optional-customer-type-
 export class CustomersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createCustomerDto: CreateCustomerDto) {
+  async create(createCustomerDto: CreateCustomerDto) {
     const data = CustomerPrismaAdapter.toPrismaCreate(createCustomerDto);
 
-    return this.databaseService.customer.create({
+    const customer = await this.databaseService.customer.create({
       data,
       include: {
         phones: true,
         addresses: true,
       },
     });
+
+    return CustomerPrismaAdapter.fromPrisma(customer);
   }
 
-  findAll(type?: OptionalCustomerTypeEnumDto) {
+  async findAll(type?: OptionalCustomerTypeEnumDto) {
     const args: any = {
       include: {
         phones: true,
@@ -34,7 +36,9 @@ export class CustomersService {
       };
     }
 
-    return this.databaseService.customer.findMany(args);
+    const customers = await this.databaseService.customer.findMany(args);
+
+    return CustomerPrismaAdapter.fromPrismaMany(customers);
   }
 
   async findOne(id: number) {
@@ -51,22 +55,31 @@ export class CustomersService {
     return CustomerPrismaAdapter.fromPrisma(customer);
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
+  async update(id: number, updateCustomerDto: UpdateCustomerDto) {
     const data = CustomerPrismaAdapter.toPrismaUpdate(updateCustomerDto);
 
-    return this.databaseService.customer.update({
+    const customer = await this.databaseService.customer.update({
       where: {
         id,
       },
       data,
     });
+
+    return CustomerPrismaAdapter.fromPrisma(customer);
   }
 
-  remove(id: number) {
-    return this.databaseService.customer.delete({
-      where: {
-        id,
-      },
+  async remove(id: number) {
+    const isCustomerExist = await this.databaseService.customer.findUnique({
+      where: { id },
     });
+    if (!isCustomerExist) {
+      return { message: 'An attempt to delete non existing Customer.' };
+    }
+
+    const customer = await this.databaseService.customer.delete({
+      where: { id },
+    });
+
+    return CustomerPrismaAdapter.fromPrisma(customer);
   }
 }

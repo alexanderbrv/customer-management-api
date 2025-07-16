@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
+import { LoggedInDto } from '@src/auth/dto/logged-in.dto';
+import { RegisterDto } from '@src/auth/dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerDto) {
+  async register(registerDto: RegisterDto) {
     const hashPassword = await bcrypt.hash(registerDto.password, 10);
     return this.usersService.create({
       name: registerDto.name,
@@ -25,17 +27,16 @@ export class AuthService {
     });
   }
 
-  async signIn(
+  async login(
     email: string,
     pass: string,
     response: Response,
-  ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOneByEmail(email);
+  ): Promise<LoggedInDto> {
+    const user = await this.usersService.authByEmail(email);
     if (!user) {
       throw new UnauthorizedException();
     }
-    const userPassword = user?.password ?? '';
-    const match = await bcrypt.compare(pass, userPassword);
+    const match = await bcrypt.compare(pass, user.password);
     if (!match) {
       throw new UnauthorizedException();
     }
@@ -50,7 +51,7 @@ export class AuthService {
       refreshToken,
       jwtConstants.refreshToken.cookieSettings,
     );
-    await this.usersService.update(user.id, { refreshToken });
+    await this.usersService.updateRefreshToken(user.id, refreshToken);
 
     const accessTokenPayload = { sub: user.id, name: user.name };
     return {
@@ -58,11 +59,11 @@ export class AuthService {
     };
   }
 
-  async refresh(jwt: string) {
+  async refresh(jwt: string): Promise<LoggedInDto> {
     if (!jwt) {
       throw new BadRequestException();
     }
-    const user = await this.usersService.findOneByRefreshToken(jwt);
+    const user = await this.usersService.userInfoByRefreshToken(jwt);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -85,7 +86,7 @@ export class AuthService {
       response.status(204);
       return;
     }
-    const user = await this.usersService.findOneByRefreshToken(jwt);
+    const user = await this.usersService.userInfoByRefreshToken(jwt);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -95,7 +96,7 @@ export class AuthService {
     if (user.name !== payload.name) {
       throw new UnauthorizedException();
     }
-    await this.usersService.update(user.id, { refreshToken: null });
+    await this.usersService.updateRefreshToken(user.id, null);
     response.clearCookie('jwt', jwtConstants.refreshToken.cookieSettings);
     response.status(204);
     return;

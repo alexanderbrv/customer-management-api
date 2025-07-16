@@ -25,18 +25,6 @@ export class CustomerPrismaAdapter {
     if (dto.email) entity.email = dto.email;
     if (dto.name) entity.name = dto.name;
     if (dto.type) entity.type = dto.type;
-    if (!!dto.phones.length) {
-      entity.phones = {
-        create: {
-          phone: dto.phones[0],
-        },
-      };
-    }
-    if (!!dto.addresses.length) {
-      entity.addresses = {
-        create: dto.addresses[0],
-      };
-    }
 
     return entity;
   }
@@ -49,13 +37,15 @@ export class CustomerPrismaAdapter {
       email: entity.email,
       phones: [],
       addresses: [],
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     };
-    if (!!entity.phones.length) {
+    if (!!entity.phones?.length) {
       entity.phones.forEach((phoneData) => {
         dto.phones.push(phoneData.phone);
       });
     }
-    if (!!entity.addresses.length) {
+    if (!!entity.addresses?.length) {
       entity.addresses.forEach((addressData) => {
         const addressDto = {
           id: addressData.id,
@@ -68,6 +58,17 @@ export class CustomerPrismaAdapter {
           zipcode: addressData?.zipcode,
         };
         dto.addresses.push(addressDto);
+      });
+    }
+
+    return dto;
+  }
+
+  static fromPrismaMany(entities: any): CustomerDto[] | [] {
+    const dto = [];
+    if (!!entities.length) {
+      entities.forEach((entity) => {
+        dto.push(CustomerPrismaAdapter.fromPrisma(entity));
       });
     }
 
