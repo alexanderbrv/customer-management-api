@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsNumber,
   IsEnum,
+  IsDate,
 } from 'class-validator';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 
@@ -33,12 +34,12 @@ export class UserDto {
   role: 'guest' | 'admin';
 
   @ApiProperty()
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty()
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
-  updatedAt: string;
+  updatedAt: Date;
 }

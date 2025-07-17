@@ -5,6 +5,7 @@ import {
   IsArray,
   ValidateNested,
   IsNumber,
+  IsDate,
 } from 'class-validator';
 import { AddressDto } from './address.dto';
 import { CustomerTypeEnumDto } from './enums/customer-type-enum.dto';
@@ -40,12 +41,12 @@ export class CustomerDto extends CustomerTypeEnumDto {
   addresses?: AddressDto[];
 
   @ApiProperty()
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty()
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
-  updatedAt: string;
+  updatedAt: Date;
 }

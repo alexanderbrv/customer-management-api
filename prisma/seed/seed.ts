@@ -1,4 +1,4 @@
-import { PrismaClient } from '@generated/prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -8,59 +8,80 @@ async function main() {
 }
 
 async function seedCountries() {
-  const seeds = await prisma.country.createMany({
-    data: [
-      {
-        country: 'Ukraine',
-        countryCode: 'UA',
-      },
-      {
-        country: 'United Kingdom',
-        countryCode: 'GB',
-      },
-      {
-        country: 'Germany',
-        countryCode: 'DE',
-      },
-      {
-        country: 'Poland',
-        countryCode: 'PL',
-      },
-      {
-        country: 'United States',
-        countryCode: 'US',
-      },
-    ],
-  });
+  const countriesData = [
+    {
+      country: 'Ukraine',
+      countryCode: 'UA',
+    },
+    {
+      country: 'United Kingdom',
+      countryCode: 'GB',
+    },
+    {
+      country: 'Germany',
+      countryCode: 'DE',
+    },
+    {
+      country: 'Poland',
+      countryCode: 'PL',
+    },
+    {
+      country: 'United States',
+      countryCode: 'US',
+    },
+  ];
 
-  console.log('Countries created:', seeds);
+  try {
+    countriesData.forEach(async (item) => {
+      await prisma.country.upsert({
+        where: { country: item.country },
+        update: {},
+        create: {
+          country: item.country,
+          countryCode: item.countryCode,
+        },
+      });
+    });
+  } catch (error) {
+    console.log('Countries Seeds has hailed.', error.message);
+  }
+  console.log('Countries created.');
 }
 
 async function seedSettlements() {
-  const seeds = await prisma.settlement.createMany({
-    data: [
-      {
-        settlement: 'Kyiv',
-      },
-      {
-        settlement: 'Lviv',
-      },
-      {
-        settlement: 'Detroit',
-      },
-      {
-        settlement: 'New York City',
-      },
-      {
-        settlement: 'Berlin',
-      },
-      {
-        settlement: 'Warsaw',
-      },
-    ],
-  });
+  const settlementsData = [
+    {
+      settlement: 'Kyiv',
+    },
+    {
+      settlement: 'Lviv',
+    },
+    {
+      settlement: 'Detroit',
+    },
+    {
+      settlement: 'New York City',
+    },
+    {
+      settlement: 'Berlin',
+    },
+    {
+      settlement: 'Warsaw',
+    },
+  ];
 
-  console.log('Settlements created:', seeds);
+  try {
+    settlementsData.forEach(async (item) => {
+      await prisma.settlement.upsert({
+        where: { settlement: item.settlement },
+        update: {},
+        create: { settlement: item.settlement },
+      });
+    });
+  } catch (error) {
+    console.log('Settlements Seeds has hailed.', error.message);
+  }
+  console.log('Settlements created.');
 }
 
 main()

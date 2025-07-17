@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -10,70 +10,70 @@ datasource db {
 }
 
 model Customer {
-    id          Int         @id @default(autoincrement())
-    name        String
-    email       String      @unique
-    type        Type
-    phones      Phone[]
-    addresses   Address[]
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  type      Type
+  phones    Phone[]
+  addresses Address[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 enum Type {
-    individual
-    business
-    government
-    institution
+  individual
+  business
+  government
+  institution
 }
 
 model Phone {
-   id           Int         @id @default(autoincrement())
-   phone        String      @unique
-   customer     Customer    @relation(fields: [customerId], references: [id])
-   customerId   Int
+  id         Int      @id @default(autoincrement())
+  phone      String   @unique
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
 }
 
 model Address {
-   id           Int         @id @default(autoincrement())
-   country      Country     @relation(fields: [countryId], references: [id])
-   countryId    Int
-   settlement   Settlement  @relation(fields: [settlementId], references: [id])
-   settlementId Int
-   street       String
-   building     String
-   block        String?
-   flat         String
-   zipcode      String?
-   customer     Customer    @relation(fields: [customerId], references: [id])
-   customerId   Int         @unique
+  id           Int        @id @default(autoincrement())
+  country      Country    @relation(fields: [countryId], references: [id])
+  countryId    Int
+  settlement   Settlement @relation(fields: [settlementId], references: [id])
+  settlementId Int
+  street       String
+  building     String
+  block        String?
+  flat         String
+  zipcode      String?
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  customerId   Int        @unique
 }
 
 model Country {
-   id           Int         @id @default(autoincrement())
-   country      String      @unique
-   countryCode  String      @unique
-   addresses    Address[]
+  id          Int       @id @default(autoincrement())
+  country     String    @unique
+  countryCode String    @unique
+  addresses   Address[]
 }
 
 model Settlement {
-   id           Int         @id @default(autoincrement())
-   settlement   String      @unique
-   addresses    Address[]
+  id         Int       @id @default(autoincrement())
+  settlement String    @unique
+  addresses  Address[]
 }
 
 model User {
-    id              Int         @id @default(autoincrement())
-    name            String
-    email           String      @unique
-    password        String
-    role            Role        @default(guest)
-    refreshToken    String?
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role     @default(guest)
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum Role {
-    guest
-    admin
+  guest
+  admin
 }
