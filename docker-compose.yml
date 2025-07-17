@@ -17,7 +17,9 @@ services:
    - .env:/app/.env
 
  server:
-  image: nginx:latest
+  build:
+   context: .
+   dockerfile: docker-services/server/Dockerfile
   restart: on-failure:5
   container_name: customer-management-api-server
   volumes:
@@ -28,7 +30,9 @@ services:
    - app
 
  db:
-  image: postgres
+  build:
+   context: .
+   dockerfile: docker-services/db/Dockerfile
   restart: on-failure:5
   environment:
    - POSTGRES_DB=${POSTGRES_DB}

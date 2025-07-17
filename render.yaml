@@ -1,0 +1,44 @@
+services:
+ - type: web
+   name: customer-management-api-app
+   plan: free
+   region: frankfurt
+   runtime: docker
+   dockerfilePath: ./docker-services/app/Dockerfile
+   dockerCommand: npm run start
+   repo: https://github.com/alexanderbrv/customer-management-api
+   autoDeployTrigger: commit
+   envVars:
+    - key: PORT
+      sync: false
+    - key: APP_ENV
+      sync: false
+    - key: NODE_ENV
+      sync: false
+    - key: ALLOWED_ORIGINS
+      sync: false
+    - key: ACCESS_SECRET_KEY
+      sync: false
+    - key: REFRESH_SECRET_KEY
+      sync: false
+    - key: DATABASE_URL
+      fromDatabase:
+       name: customer-management-api-db
+       property: connectionString
+
+databases:
+ - name: customer-management-api-db
+   databaseName: customer_management_api
+   plan: free
+   region: frankfurt
+   runtime: docker
+   dockerfilePath: ./docker-services/db/Dockerfile
+   envVars:
+    - key: DATABASE_URL
+      sync: false
+    - key: POSTGRES_DB
+      sync: false
+    - key: POSTGRES_USER
+      sync: false
+    - key: POSTGRES_PASSWORD
+      sync: false
