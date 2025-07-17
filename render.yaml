@@ -31,14 +31,3 @@ databases:
    databaseName: customer_management_api
    plan: free
    region: frankfurt
-   runtime: docker
-   dockerfilePath: ./docker-services/db/Dockerfile
-   envVars:
-    - key: DATABASE_URL
-      sync: false
-    - key: POSTGRES_DB
-      sync: false
-    - key: POSTGRES_USER
-      sync: false
-    - key: POSTGRES_PASSWORD
-      sync: false
