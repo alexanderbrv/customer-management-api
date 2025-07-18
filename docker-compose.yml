@@ -3,6 +3,7 @@ services:
   build:
    context: .
    dockerfile: docker-services/app/Dockerfile
+   target: ${APP_ENV}
   restart: on-failure:5
   container_name: customer-management-api-app
   env_file:

@@ -5,7 +5,6 @@ services:
    region: frankfurt
    runtime: docker
    dockerfilePath: ./docker-services/app/Dockerfile
-   dockerCommand: npm run start
    repo: https://github.com/alexanderbrv/customer-management-api
    autoDeployTrigger: commit
    envVars:
