@@ -15,7 +15,7 @@ WORKDIR /app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . .
 COPY --chown=node:node .built-env-on-render-host .env
-RUN npm clean-install --omit=dev
+RUN npm ci -f --omit=dev
 RUN npm cache clean --force
 RUN npm run build
 RUN npx prisma generate
