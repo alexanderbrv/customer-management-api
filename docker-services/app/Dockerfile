@@ -13,10 +13,11 @@ CMD [ "npm", "run", "start:dev" ]
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
 COPY . .
-RUN npx prisma generate
+RUN npm clean-install
+RUN npm cache clean --force
 RUN npm run build
+RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npx prisma db seed
 

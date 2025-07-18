@@ -1,7 +1,7 @@
 {
-  "name": "api-nest-app",
+  "name": "customer-management-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "Customer Management API",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
