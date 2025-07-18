@@ -20,6 +20,8 @@ services:
       sync: false
     - key: REFRESH_SECRET_KEY
       sync: false
+    - key: DATABASE_URL_WITH_SCHEMA
+      sync: false
     - key: DATABASE_URL
       fromDatabase:
        name: customer-management-api-db
