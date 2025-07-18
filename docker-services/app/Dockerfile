@@ -9,13 +9,13 @@ RUN npm run build
 EXPOSE $PORT
 CMD [ "npm", "run", "start:dev" ]
 
-# Production Stage: build
+# Build Stage
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 COPY . .
 COPY .built-env-on-render-host .env
-RUN npm ci -f
+RUN npm ci
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
