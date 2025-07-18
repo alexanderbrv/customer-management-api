@@ -11,6 +11,7 @@ CMD [ "npm", "run", "start:dev" ]
 
 # Production Stage
 FROM node:18-alpine AS build
+ENV DATABASE_URL $DATABASE_URL
 WORKDIR /app
 COPY package*.json ./
 COPY . .
