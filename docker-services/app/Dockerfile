@@ -16,12 +16,11 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node . .
 COPY --chown=node:node .built-env-on-render-host .env
 RUN npm ci -f
-RUN npm cache clean --force
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npx prisma db seed
-RUN npm prune --production
+RUN npm ci -f --omit=dev && npm cache clean --force
 USER node
 
 # Production Stage
