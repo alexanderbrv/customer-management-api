@@ -14,8 +14,9 @@ FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 COPY . .
-COPY .built-env-on-render-host .env
+COPY .build-env-on-render-host .env
 RUN npm ci
+RUN npm cache clean --force
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
@@ -29,4 +30,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/prisma/migrations ./prisma/migrations
+COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=build /app/tsconfig.json ./tsconfig.json
 CMD [ "npm", "run", "start:prod" ]
