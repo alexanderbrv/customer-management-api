@@ -17,8 +17,8 @@ COPY . .
 COPY .build-env-on-render-host .env
 RUN npm ci
 RUN npm cache clean --force
-RUN npm run build
 RUN npx prisma generate
+RUN npm run build
 RUN npx prisma migrate deploy
 RUN npx prisma db seed
 RUN npm ci -f --omit=dev && npm cache clean --force
