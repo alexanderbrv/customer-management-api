@@ -14,6 +14,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 COPY . .
+COPY /etc/.env ./.env
 RUN npm clean-install
 RUN npm cache clean --force
 RUN npm run build
