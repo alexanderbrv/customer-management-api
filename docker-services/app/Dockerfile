@@ -14,7 +14,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . .
-COPY --chown=node:node .built-env .env # Access the 'DATABASE_URL' env variable during build on 'Render' host
+COPY --chown=node:node .built-env-on-render-host .env
 RUN npm clean-install -f --only=production
 RUN npm cache clean --force
 RUN npm run build
