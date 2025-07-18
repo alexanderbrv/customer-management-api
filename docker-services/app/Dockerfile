@@ -18,11 +18,11 @@ COPY --chown=node:node .built-env-on-render-host .env
 RUN npm ci -f --omit=dev
 RUN npm cache clean --force
 RUN npm run build
-RUN npm install ts-node -P
 RUN npx prisma generate
 RUN npx prisma migrate deploy
+RUN npm install ts-jest ts-loader ts-node tsconfig-paths -D
 RUN npx prisma db seed
-RUN npm uninstall ts-node
+RUN npm uninstall ts-jest ts-loader ts-node tsconfig-paths
 USER node
 
 # Production Stage
