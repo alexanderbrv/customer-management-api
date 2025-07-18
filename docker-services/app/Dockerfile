@@ -15,14 +15,13 @@ WORKDIR /app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . .
 COPY --chown=node:node .built-env-on-render-host .env
-RUN npm ci -f --omit=dev
+RUN npm ci -f
 RUN npm cache clean --force
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
-RUN npm install ts-jest ts-loader ts-node tsconfig-paths -D
 RUN npx prisma db seed
-RUN npm uninstall ts-jest ts-loader ts-node tsconfig-paths
+RUN npm prune --production
 USER node
 
 # Production Stage
