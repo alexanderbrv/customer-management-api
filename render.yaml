@@ -7,25 +7,13 @@ services:
    dockerfilePath: ./docker-services/app/Dockerfile
    repo: https://github.com/alexanderbrv/customer-management-api
    autoDeployTrigger: commit
-   envVars:
-    - key: PORT
-      sync: false
-    - key: APP_ENV
-      sync: false
-    - key: NODE_ENV
-      sync: false
-    - key: ALLOWED_ORIGINS
-      sync: false
-    - key: ACCESS_SECRET_KEY
-      sync: false
-    - key: REFRESH_SECRET_KEY
-      sync: false
-    - key: DATABASE_URL_WITH_SCHEMA
-      sync: false
-    - key: DATABASE_URL
-      fromDatabase:
-       name: customer-management-api-db
-       property: connectionString
+   envVarGroups:
+    - name: main-env-group
+      envVars:
+       - key: DATABASE_URL
+         fromDatabase:
+          name: customer-management-api-db
+          property: connectionString
 
 databases:
  - name: customer-management-api-db
