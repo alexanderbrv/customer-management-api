@@ -11,6 +11,7 @@ CMD [ "npm", "run", "start:dev" ]
 
 # Build Stage
 FROM node:18-alpine AS build
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING 1
 WORKDIR /app
 COPY package*.json ./
 COPY . .
