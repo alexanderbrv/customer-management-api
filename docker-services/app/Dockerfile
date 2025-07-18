@@ -9,25 +9,25 @@ RUN npm run build
 EXPOSE $PORT
 CMD [ "npm", "run", "start:dev" ]
 
-# Production Stage
+# Production Stage: build
 FROM node:18-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-COPY . .
-COPY .built-env .env
-RUN npm clean-install
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node . .
+COPY --chown=node:node .built-env .env # Access the 'DATABASE_URL' env variable during build on 'Render' host
+RUN npm clean-install -f --only=production
 RUN npm cache clean --force
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npx prisma db seed
+USER node
 
+# Production Stage
 FROM node:18-alpine AS production
+ENV NODE_ENV production
 WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/prisma/migrations ./prisma/migrations
-COPY --from=build /app/prisma/schema.prisma ./prisma/schema.prisma
-COPY --from=build /app/tsconfig.json ./tsconfig.json
-CMD ["node", "dist/main"]
+COPY --chown=node:node --from=build /app/dist ./dist
+COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/package.json ./package.json
+CMD [ "npm", "run", "start:prod" ]
