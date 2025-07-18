@@ -12,22 +12,21 @@ CMD [ "npm", "run", "start:dev" ]
 # Production Stage: build
 FROM node:18-alpine AS build
 WORKDIR /app
-COPY --chown=node:node package*.json ./
-COPY --chown=node:node . .
-COPY --chown=node:node .built-env-on-render-host .env
+COPY package*.json ./
+COPY . .
+COPY .built-env-on-render-host .env
 RUN npm ci -f
 RUN npm run build
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npx prisma db seed
 RUN npm ci -f --omit=dev && npm cache clean --force
-USER node
 
 # Production Stage
 FROM node:18-alpine AS production
 ENV NODE_ENV production
 WORKDIR /app
-COPY --chown=node:node --from=build /app/dist ./dist
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
-COPY --chown=node:node --from=build /app/package.json ./package.json
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
 CMD [ "npm", "run", "start:prod" ]
