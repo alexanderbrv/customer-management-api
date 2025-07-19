@@ -28,8 +28,9 @@ USER node
 
 # Production Stage
 FROM node:22-alpine AS production
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --chown=node:node --from=build /app/dist ./dist
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/package.json ./package.json
+USER node
 CMD [ "npm", "run", "start:prod" ]
