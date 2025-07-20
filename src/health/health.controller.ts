@@ -48,11 +48,19 @@ export class HealthController {
   }
 
   private checkMemoryHeap() {
-    return () => this.memory.checkHeap('memory_heap', Number(process.env.HEALTH_MEMORY_LIMIT) * 1024 * 1024);
+    return () =>
+      this.memory.checkHeap(
+        'memory_heap',
+        Number(process.env.HEALTH_MEMORY_LIMIT) * 1024 * 1024,
+      );
   }
 
   private checkMemoryRss() {
-    return () => this.memory.checkRSS('memory_rss', Number(process.env.HEALTH_MEMORY_LIMIT) * 1024 * 1024);
+    return () =>
+      this.memory.checkRSS(
+        'memory_rss',
+        Number(process.env.HEALTH_MEMORY_LIMIT) * 1024 * 1024,
+      );
   }
 
   private checkStorage() {
