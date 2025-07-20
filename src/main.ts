@@ -28,7 +28,7 @@ async function bootstrap() {
     }),
   );
   app.use(cookieParser());
-  app.setGlobalPrefix('api', { exclude: ['auth/(.*)'] });
+  app.setGlobalPrefix('api', { exclude: ['auth/(.*)', 'health'] });
   app.enableCors({ origin: process.env.ALLOWED_ORIGINS?.split(',') });
 
   const config = new DocumentBuilder()
