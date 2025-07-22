@@ -5,19 +5,27 @@ import { Prisma } from '@generated/prisma';
 
 export class CustomerPrismaAdapter {
   static toPrismaCreate(dto: CreateCustomerDto): Prisma.CustomerCreateInput {
-    return {
+    const data: any = {
       email: dto.email,
       name: dto.name,
       type: dto.type,
-      phones: {
+    };
+
+    if (!!dto.phones?.length && dto.phones[0]) {
+      data.phones = {
         create: {
           phone: dto.phones[0],
         },
-      },
-      addresses: {
+      };
+    }
+
+    if (!!dto.addresses?.length && dto.addresses[0]) {
+      data.addresses = {
         create: dto.addresses[0],
-      },
-    };
+      };
+    }
+
+    return data;
   }
 
   static toPrismaUpdate(dto: UpdateCustomerDto): Prisma.CustomerUpdateInput {

@@ -42,11 +42,13 @@ export class CustomerDto extends CustomerTypeEnumDto {
 
   @ApiProperty()
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   createdAt: Date;
 
   @ApiProperty()
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   updatedAt: Date;
 }
