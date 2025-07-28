@@ -10,12 +10,15 @@ services:
    - .env
   depends_on:
    - db
+   - test_db
   volumes:
    - ./src:/app/src
    - ./logs:/app/logs
    - ./prisma:/app/prisma
-   - ./generated:/app/generated
-   - .env:/app/.env
+   - ./test:/app/test
+   - ./.env:/app/.env
+   - ./.env.test:/app/.env.test
+   - ./package.json:/app/package.json
 
  server:
   build:
@@ -44,6 +47,17 @@ services:
    - ./docker-services/db/pgdata:/var/lib/postgresql/data
   ports:
    - '5432:5432'
+
+ test_db:
+  build:
+   context: .
+   dockerfile: docker-services/test_db/Dockerfile
+  restart: on-failure:5
+  env_file:
+   - .env.test
+  container_name: customer-management-api-test-db
+  ports:
+   - '5433:5432'
 
  pgadmin:
   image: dpage/pgadmin4

@@ -1,11 +1,16 @@
 # Node.js App
 **/dist
+generated
 .git
 npm-debug.log
-README.md
+LICENSE
+*.md
 
 # Docker
+docker-compose.yml
 /docker-services
+!/docker-services/test_db/init.sql
+!/docker-services/test_db/init.sh
 
 # OS and IDEA
 .DS_Store

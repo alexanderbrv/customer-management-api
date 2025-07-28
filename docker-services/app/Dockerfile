@@ -1,14 +1,16 @@
 # Development Stage
 FROM node:22-alpine AS development
+ENV TERM=xterm-256color
 WORKDIR /app
+RUN apk update && apk add nano
 COPY --chown=node:node package*.json ./
 RUN npm install -g npm@11.4.2
-RUN npm install
+RUN npm ci
 COPY --chown=node:node . .
 RUN chown node:node ./
+USER node
 RUN npx prisma generate
 EXPOSE $PORT
-USER node
 CMD [ "npm", "run", "start:dev" ]
 
 # Build Stage

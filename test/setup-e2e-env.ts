@@ -1,0 +1,7 @@
+import { config } from 'dotenv';
+import * as path from 'path';
+
+config({
+  path: path.resolve(process.cwd(), '.env.test'),
+  override: true,
+});
